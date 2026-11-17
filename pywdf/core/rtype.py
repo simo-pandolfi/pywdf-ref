@@ -80,10 +80,12 @@ class RootRTypeAdaptor(RTypeAdaptor, rootWDF):
         super().__init__(down_ports, impedance_calc, None)
 
     def compute(self) -> None:
+        # Standard order: collect the reflected waves, scatter, distribute.
+        for i in range(len(self.down_ports)):
+            self.a_vals[i] = self.down_ports[i].propagate_reflected_wave()
         self.r_type_scatter()
         for i in range(len(self.down_ports)):
             self.down_ports[i].accept_incident_wave(self.b_vals[i])
-            self.a_vals[i] = self.down_ports[i].propagate_reflected_wave()
 
     def calc_impedance(self) -> None:
         self.impedance_calc(self)
