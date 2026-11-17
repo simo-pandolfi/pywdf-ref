@@ -43,7 +43,14 @@ class RTypeAdaptor(baseWDF):
         for i in range(len(self.down_ports)):
             idx = self.get_port_idx(i)
             self.a_vals[idx] = self.down_ports[i].propagate_reflected_wave()
-        self.b = self.b_vals[self.up_port_idx]
+        # Up-port row of S*a from the current down-port waves. The up-port
+        # incident wave of this sample is not known yet: the port must be
+        # adapted (S[up][up] == 0), so its term is excluded.
+        up = self.up_port_idx
+        self.b = 0.0
+        for j in range(self.n_ports):
+            if j != up:
+                self.b += self.S_matrix[up][j] * self.a_vals[j]
         return self.b
 
     def get_port_idx(self, x: int) -> int:
