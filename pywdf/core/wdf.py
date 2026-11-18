@@ -74,8 +74,10 @@ class OpenCircuit(baseWDF):
         self.calc_impedance()
 
     def calc_impedance(self) -> None:
-        self.Rp = 0
-        self.G = 1e16
+        # The leaf reflects b = a of the previous sample, so the port must be
+        # (nearly) disconnected from its junction: very large port resistance.
+        self.Rp = 1e15
+        self.G = 1.0 / self.Rp
 
     def accept_incident_wave(self, a: float) -> None:
         self.a = a
