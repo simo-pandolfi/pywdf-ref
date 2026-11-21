@@ -5,10 +5,38 @@
 
 <code>pywdf</code> is a Python framework for modeling and simulating wave digital filter circuits. It allows users to easily create and analyze WDF circuit models in a high-level, object-oriented manner. The library includes a variety of built-in components, such as voltage sources, capacitors, diodes etc., as well as the ability to create custom components and circuits. Additionally, pywdf includes a variety of analysis tools, such as frequency response and transient analysis, to aid in the design and optimization of WDF circuits. Also included are several example circuits as shown below. 
 
+## pywdf-ref
+
+This repository is a copy of [gusanthon/pywdf](https://github.com/gusanthon/pywdf)
+at commit `3a1dac9` (tag `orig-3a1dac9`) with three corrections on the
+`fixes` branch, one commit each. It is the reference used to validate
+rswdf (a Rust WDF library) and the
+[py78drums](https://github.com/simo-pandolfi/py78drums) drum machine model.
+Nothing else in the library is changed. Apart from this section and the
+installation command, this README is the original one.
+
+| | Commit | Correction |
+|---|---|---|
+| E2 | `7911766` | `RTypeAdaptor.propagate_reflected_wave()` returned the up-port wave of the previous sample's scattering; the up-port row of S*a is now computed from the down-port waves just collected (the up port must be adapted, S[up][up] = 0, as in all the R-type examples). RC low-pass impulse response: max error 2.1e-4 -> 7.5e-17. |
+| E1 | `412bb44` | `RootRTypeAdaptor.compute()` scattered with the waves of the previous sample: source inputs one sample late, reactive ports read as (a[n] + b[n+1]) / 2. Now: collect, scatter, distribute. RC low-pass: max error 1.0e-2 -> 9.0e-17. |
+| E3 | `7cdf940` | `OpenCircuit` had Rp = 0, G = 1e16 (the values of `ShortCircuit`) and behaved as a short in a parallel junction; now Rp = 1e15, G = 1/Rp. OC \|\| C in an RC low-pass: max error 4.6e-1 -> 4.9e-15. |
+
+The outputs of the R-type examples change accordingly (for example
+`BaxandallEQ` and `UnadaptedBaxandallEQ`, the same circuit, differed by 1.05e-1
+and now agree within 1.8e-14). `tools/` holds the scripts that reproduce the
+errors and check the corrections on both versions, with the results in
+`tools/README.md`.
+
+Known limitation, not corrected: `Diode` uses an approximation of the Wright
+omega function (`omega4`) with a relative error up to 3.5 % against
+`scipy.special.wrightomega` (measured in py78drums).
+
 ## Installation
 ```
-pip install git+https://github.com/gusanthon/pywdf
+pip install git+https://github.com/simo-pandolfi/pywdf-ref@fixes
 ```
+To pin the version, use a commit hash in place of `fixes`. The original
+pywdf: `pip install git+https://github.com/gusanthon/pywdf`.
 
 ## Structure
 The <code>core</code> directory contains the main source code of the repository. Basic WDF elements and adaptors are contained in <code>wdf.py</code>, adapted and unadapted R-Type adaptors are contained in <code>rtype.py</code>, and the circuit class and functionalities for examples are contained in <code>circuit.py</code>.
