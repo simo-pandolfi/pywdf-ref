@@ -28,8 +28,8 @@ class LCOscillator(Circuit):
 
         # initialize wdf
         self.C = 1.0e-6
-        self.L = 1.0e3
         self.twopi = 2 * np.pi
+        self.L = 1.0 / (np.square(self.twopi * self.frequency) * self.C)
 
         self.C1 = Capacitor(self.C, self.fs)
         self.L1 = Inductor(self.L, self.fs)
