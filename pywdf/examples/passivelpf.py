@@ -25,7 +25,7 @@ class PassiveLPF(Circuit):
         self.P1 = ParallelAdaptor(self.C1, self.S1)
         self.S2 = SeriesAdaptor(self.R1, self.P1)
 
-        self.Vs = IdealVoltageSource(self.P1)
+        self.Vs = IdealVoltageSource(self.S2)
 
         super().__init__(self.Vs, self.Vs, self.C2)
 
