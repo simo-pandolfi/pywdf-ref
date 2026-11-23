@@ -39,6 +39,7 @@ class LCOscillator(Circuit):
         self.S1 = SeriesAdaptor(self.Vs, self.S2)
 
         self.SW1 = Switch(self.S1)
+        self.SW1.set_closed(closed)
 
         # init and set circuit
         super().__init__(self.Vs, self.SW1, self.C1)
@@ -60,6 +61,7 @@ class LCOscillator(Circuit):
 
         # update switch status
         if switch_closed != self.closed:
+            self.closed = switch_closed
             self.SW1.set_closed(switch_closed)
 
         # update gain
