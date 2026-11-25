@@ -41,7 +41,7 @@ class BaxandallEQ(Circuit):
 
         # Port D
         self.Pb_minus = Resistor(self.Pb * .5)
-        self.Cc = Capacitor(22e-9, fs)
+        self.Cc = Capacitor(220e-9, fs)
         self.P3 = ParallelAdaptor(self.Pb_minus, self.Cc)
         self.Resb = Resistor(1e3)
         self.S3 = SeriesAdaptor(self.Resb, self.P3)
@@ -54,7 +54,7 @@ class BaxandallEQ(Circuit):
         self.S2 = SeriesAdaptor(self.Resa, self.P2)
 
         # Port F
-        self.Ca = Capacitor(1e6,self.fs)
+        self.Ca = Capacitor(1e-6,self.fs)
 
         self.R_adaptor = RTypeAdaptor([self.S4, self.P1, self.Resc, self.S3, self.S2], self._impedance_calc, 5)
         self.S1 = SeriesAdaptor(self.R_adaptor, self.Ca)
@@ -97,7 +97,7 @@ class BaxandallEQ(Circuit):
             elif new_treble >= 1:
                 new_treble = .99999999999999
             self.Pt_plus.set_resistance(self.Pt * new_treble)
-            self.Pt_plus.set_resistance(self.Pt * (1 - new_treble))
+            self.Pt_minus.set_resistance(self.Pt * (1 - new_treble))
             self.treble = new_treble
 
 
