@@ -85,9 +85,9 @@ class BassmanToneStack(Circuit):
 
     def set_mid(self, new_mid: float):
         if self.mid != new_mid:
-            self.R3_plus.set_resistance(self.R1max * (1 - new_mid))
-            self.R3_minus.set_resistance(self.R1max * new_mid)
-            self.treble = new_mid
+            self.R3_plus.set_resistance(self.R3max * (1 - new_mid))
+            self.R3_minus.set_resistance(self.R3max * new_mid)
+            self.mid = new_mid
 
     def set_treble(self, new_treble: float):
         if self.treble != new_treble:
@@ -96,11 +96,11 @@ class BassmanToneStack(Circuit):
             self.treble = new_treble
 
     def process_sample(self, sample: float):
-        return super().process_sample(sample) + \
-                self.R1_minus.wave_to_voltage() + \
-                self.R3_plus.wave_to_voltage() + \
-                self.R2.wave_to_voltage()
-
+        # Output: voltage of the treble wiper (between R1_plus and R1_minus).
+        # super().process_sample runs the sample and returns the R3_minus voltage.
+        v_r3_minus = super().process_sample(sample)
+        return (self.R2.wave_to_voltage() + self.R3_plus.wave_to_voltage()
+                - self.R1_minus.wave_to_voltage() - v_r3_minus)
 
 if __name__ == '__main__':
     bts = BassmanToneStack(44100, .5 , .5 ,.5)
