@@ -58,7 +58,7 @@ class DiodeClipper(Circuit):
 
     def set_num_diodes(self, new_n_diodes: float) -> None:
         if self.Dp.n_diodes != new_n_diodes:
-            self.Dp.set_diode_params(self.Dp.Is, self.Dp.Vt, new_n_diodes)
+            self.Dp.set_n_diodes(new_n_diodes)
 
 if __name__ == "__main__":
 
