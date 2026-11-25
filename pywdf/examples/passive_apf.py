@@ -38,7 +38,7 @@ class PassiveAPF(Circuit):
         self.R1_value = -10.8e3
         self.R2_value = 3.6e3
         self.R3_value = 5.4e3
-        self.C1_value = 9.259e-8
+        self.C1_value = 1.0 / (-self.R1_value * self.cutoff)
 
         ## define ports
 
@@ -278,7 +278,6 @@ class PassiveAPF(Circuit):
         if self.cutoff != cutoff:
             self.cutoff = cutoff
             self.C1_value = 1.0 / (-self.R1.Rp * cutoff)
-            print(self.C1_value)
             self.C1.set_capacitance(self.C1_value)
 
 
