@@ -13,7 +13,10 @@ at commit `3a1dac9` (tag `orig-3a1dac9`) with three corrections on the
 rswdf (a Rust WDF library) and the
 [py78drums](https://github.com/simo-pandolfi/py78drums) drum machine model.
 Apart from this section and the installation command, this README is the
-original one.
+original one. In the Citation section, the BibTeX title reads "wave filter
+circuits", as in the UPF repository record; the title of the paper (DAFx-23
+proceedings, pp. 335-341) is "pywdf: An Open Source Library for Prototyping
+and Simulating Wave Digital Filter Circuits in Python".
 
 | | Commit | Correction |
 |---|---|---|
@@ -28,15 +31,25 @@ and now agree within 1.8e-14). `tools/` holds the scripts that reproduce the err
 Nothing else in the library (pywdf/core) is changed. Later commits on
 `fixes` correct some examples, independently of E1-E3:
 
-| Commit | Example |
-|---|---|
-| `58ed46e` | `PassiveLPF`: source connected to S2 |
-| `a8b318d` | `LCOscillator`: L derived from the frequency in the constructor |
-| `394d651` | `LCOscillator`: switch state kept in sync |
-| `3114954` | `DiodeClipper.set_num_diodes`: thermal voltage no longer compounded |
-| `0902036` | `BassmanToneStack`: mid control and output fixed |
-| `18fde19` | `BaxandallEQ`: aligned with the C++ model it was ported from |
-| `e4f5d25` | `PassiveAPF`: print removed, cutoff applied |
+| | Commit | Example |
+|---|---|---|
+| E4 | `58ed46e` | `PassiveLPF`: source connected to S2 instead of P1 |
+| E5 | `a8b318d` | `LCOscillator`: L derived from the frequency in the constructor |
+| E5 | `394d651` | `LCOscillator`: `closed` applied, switch state kept in sync |
+| E6 | `3114954` | `DiodeClipper.set_num_diodes`: thermal voltage no longer compounded |
+| E7, E8 | `0902036` | `BassmanToneStack`: `set_mid` uses the mid pot; output expression |
+| E9-E11 | `18fde19` | `BaxandallEQ`: `Pt_minus` set by `set_treble`, `Ca` = 1 uF, `Cc` = 220 nF |
+| E12, E13 | `e4f5d25` | `PassiveAPF`: print removed, `cutoff` applied in the constructor |
+
+`tools/rtype_corrections_check.py` checks E8-E11 against a nodal analysis.
+
+Several examples look like ports of the C++ examples in
+[jatinchowdhury18/WaveDigitalFilters](https://github.com/jatinchowdhury18/WaveDigitalFilters),
+which is GPL-3.0, while pywdf is MIT: `baxandalleq.py` corresponds line by
+line to `BaxandallEQ/src` at commit `f391774`. E9-E11 restore the component
+values and the potentiometer formula of that model; no code was copied. The
+question of the licence of these examples has been raised with the pywdf
+author.
 
 Known limitation, not corrected: `Diode` uses an approximation of the Wright
 omega function (`omega4`) with a relative error up to 3.5 % against
