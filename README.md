@@ -12,8 +12,8 @@ at commit `3a1dac9` (tag `orig-3a1dac9`) with three corrections on the
 `fixes` branch, one commit each. It is the reference used to validate
 rswdf (a Rust WDF library) and the
 [py78drums](https://github.com/simo-pandolfi/py78drums) drum machine model.
-Nothing else in the library is changed. Apart from this section and the
-installation command, this README is the original one.
+Apart from this section and the installation command, this README is the
+original one.
 
 | | Commit | Correction |
 |---|---|---|
@@ -21,11 +21,22 @@ installation command, this README is the original one.
 | E1 | `412bb44` | `RootRTypeAdaptor.compute()` scattered with the waves of the previous sample: source inputs one sample late, reactive ports read as (a[n] + b[n+1]) / 2. Now: collect, scatter, distribute. RC low-pass: max error 1.0e-2 -> 9.0e-17. |
 | E3 | `7cdf940` | `OpenCircuit` had Rp = 0, G = 1e16 (the values of `ShortCircuit`) and behaved as a short in a parallel junction; now Rp = 1e15, G = 1/Rp. OC \|\| C in an RC low-pass: max error 4.6e-1 -> 4.9e-15. |
 
-The outputs of the R-type examples change accordingly (for example
-`BaxandallEQ` and `UnadaptedBaxandallEQ`, the same circuit, differed by 1.05e-1
-and now agree within 1.8e-14). `tools/` holds the scripts that reproduce the
-errors and check the corrections on both versions, with the results in
+The outputs of the R-type examples change accordingly (for example `BaxandallEQ` and `UnadaptedBaxandallEQ`, the same circuit, differed by 1.05e-1
+and now agree within 1.8e-14). `tools/` holds the scripts that reproduce the errors and check the corrections on both versions, with the results in
 `tools/README.md`.
+
+Nothing else in the library (pywdf/core) is changed. Later commits on
+`fixes` correct some examples, independently of E1-E3:
+
+| Commit | Example |
+|---|---|
+| `58ed46e` | `PassiveLPF`: source connected to S2 |
+| `a8b318d` | `LCOscillator`: L derived from the frequency in the constructor |
+| `394d651` | `LCOscillator`: switch state kept in sync |
+| `3114954` | `DiodeClipper.set_num_diodes`: thermal voltage no longer compounded |
+| `0902036` | `BassmanToneStack`: mid control and output fixed |
+| `18fde19` | `BaxandallEQ`: aligned with the C++ model it was ported from |
+| `e4f5d25` | `PassiveAPF`: print removed, cutoff applied |
 
 Known limitation, not corrected: `Diode` uses an approximation of the Wright
 omega function (`omega4`) with a relative error up to 3.5 % against
